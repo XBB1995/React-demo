@@ -17,14 +17,14 @@ export default class Like extends Component {
     // 两个参数 上一次的状态 和 上一次的props
     // setState 方法是异步方法 第二个参数是回调函数 获取最新的state
     this.setState((prevState, props) => {
-      console.log('内部: ' + this.state.isLiked);
+      // console.log('内部: ' + this.state.isLiked);
       return {
         isLiked: !prevState.isLiked
       }
     }, () => {
-      console.log(`回调函数: ${this.state.isLiked}`)
+      // console.log(`回调函数: ${this.state.isLiked}`)
     })
-    console.log(`外部: ${this.state.isLiked}`)
+    // console.log(`外部: ${this.state.isLiked}`)
   }
   render() {
     return (
@@ -34,7 +34,6 @@ export default class Like extends Component {
             this.state.isLiked ? '取消😀' : '喜欢😂'
           }
         </span>
-
       </div>
     )
   }

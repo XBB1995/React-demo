@@ -4,8 +4,16 @@ import PropTypes from 'prop-types'
 
 export default class TodoList extends Component {
   static propTypes = {
-    todos: PropTypes.array
+    // 可以通过shape来定制数组对象中具体的类型要求
+    todos: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      isCompleted: PropTypes.bool.isRequired
+    })).isRequired,
+    onCompletedChange: PropTypes.func,
+    onTodoItemDelete: PropTypes.func
   }
+
   render() {
     return (
       <ul>
@@ -20,6 +28,8 @@ export default class TodoList extends Component {
                 // isCompleted={todo.isCompleted}
                 // 使用...展开表达式 而不用每个属性传入
                 {...todo}
+                onCompletedChange={this.props.onCompletedChange}
+                onTodoItemDelete={this.props.onTodoItemDelete}
               />
             )
           })

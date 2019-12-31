@@ -31,6 +31,62 @@ export default class App extends Component {
       }]
     }
   }
+  addTodo = (todoTitle) => {
+    // console.log(todoTitle)
+    // this.setState({
+    //   todos: this.state.todos.push({
+    //     id: Math.random(),
+    //     title: "what the hell",
+    //     isCompleted: true
+    //   })
+    // })
+    // 通过上述写法 push返回的是todos数组的长度 可用concat替代 或使用slice拷贝数组
+    this.setState({
+      todos: this.state.todos.concat({
+        id: Math.floor(Math.random()*10),
+        title: todoTitle,
+        isCompleted: false
+      })
+    })
+    // 或使用slice 展开符 拷贝数组 再使用push
+    // const newTodos = [...this.state.todos]
+    // newTodos.push({
+    //   id: Math.random(),
+    //   title: todoTitle,
+    //   isCompleted: false
+    // })
+    // this.setState({
+    //   todos: newTodos
+    // })
+  }
+
+  onCompletedChange = (id) => {
+    // console.log("onCompletedChange run!")
+    this.setState((prevState) => {
+      return {
+        todos: prevState.todos.map(todo => {
+          if (todo.id === id) {
+            todo.isCompleted = !todo.isCompleted
+          }
+          return todo
+        })
+      }
+    })
+  }
+  
+  onTodoItemDelete = (id) => {
+    // console.log("delete item!")
+    this.setState((prevState)=>{
+      return {
+        // 使用filter删除元素
+        todos: prevState.todos.filter(todo => {
+          if (todo.id === id) return ''
+          return todo
+        })
+      }
+    })
+  }
+
   render() {
     return (
       // <Fragment>
@@ -53,8 +109,14 @@ export default class App extends Component {
         <TodoHeader desc={this.state.desc} x={1} y={2}>
           <p>{this.state.title}</p>
         </TodoHeader>
-        <TodoInput btnText="Add" />
-        <TodoList todos={this.state.todos} />
+        <TodoInput btnText="Add"
+          addTodo={this.addTodo}
+        />
+        <TodoList
+          onCompletedChange={this.onCompletedChange}
+          onTodoItemDelete={this.onTodoItemDelete}
+          todos={this.state.todos}
+        />
         <Like />
       </>
       // </Fragment>
