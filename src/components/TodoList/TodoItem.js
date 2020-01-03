@@ -41,14 +41,14 @@ export default class TodoItem extends Component {
     const {
       id,
       title,
-      isCompleted
+      completed
     } = this.props
     // console.log(`TodoItem ${title} render`)
     // 解构可同样用在render函数中
     return (
       <li>
         <input
-          checked={isCompleted}
+          checked={completed}
           onChange={this.handleCheckboxChange}
           type="checkbox"
         />
@@ -64,8 +64,8 @@ export default class TodoItem extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     // 优化组件执行 返回bool值
-    // 比较isCompleted状态 来决定是否更新
-    return nextProps.isCompleted !== this.props.isCompleted
+    // 比较completed状态 来决定是否更新
+    return nextProps.completed !== this.props.completed
   }
 
   componentDidUpdate() {
@@ -75,7 +75,7 @@ export default class TodoItem extends Component {
   static getDerivedStateFromProps(props) {
     // 返回一个对象 
     return {
-      completedText: props.isCompleted ? '完成' : '未完成'
+      completedText: props.completed ? '完成' : '未完成'
     }
   }
 
@@ -119,18 +119,18 @@ export default class TodoItem extends Component {
 //     const {
 //       id,
 //       title,
-//       isCompleted
+//       completed
 //     } = this.props
 //     console.log(`TodoItem ${title} render`)
 //     // 解构可同样用在render函数中
 //     return (
 //       <li>
 //         <input
-//           checked={isCompleted}
+//           checked={completed}
 //           onChange={this.handleCheckboxChange}
 //           type="checkbox"
 //         />
-//         {id} {title} {isCompleted ? '已完成 ' : '未完成 '}
+//         {id} {title} {completed ? '已完成 ' : '未完成 '}
 //         <button onClick={this.handleBtnClick}>Delete</button>
 //       </li>
 //     )

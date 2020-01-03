@@ -8,7 +8,7 @@ export default class TodoList extends Component {
     todos: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
-      isCompleted: PropTypes.bool.isRequired
+      completed: PropTypes.bool.isRequired
     })).isRequired,
     onCompletedChange: PropTypes.func,
     onTodoItemDelete: PropTypes.func
@@ -25,7 +25,7 @@ export default class TodoList extends Component {
                 key={todo.id}
                 // id={todo.id}
                 // title={todo.title}
-                // isCompleted={todo.isCompleted}
+                // completed={todo.completed}
                 // 使用...展开表达式 而不用每个属性传入
                 {...todo}
                 onCompletedChange={this.props.onCompletedChange}

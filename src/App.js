@@ -7,6 +7,8 @@ import {
   Like
 } from './components'
 
+import { getTodos } from './services'
+
 export default class App extends Component {
   // state 自身状态 class特有 props 传递得到的状态
   // 函数式组件 又称 无状态组件 || 类组件 又称 有状态组件
@@ -20,15 +22,8 @@ export default class App extends Component {
       title: "待办事项类型",
       desc: "Do it now!",
       article: '<div>this is a article paragraph</div>',
-      todos: [{
-        id: 1,
-        title: "起床",
-        isCompleted: true
-      }, {
-        id: 2,
-        title: "吃饭",
-        isCompleted: false
-      }]
+      todos: [],
+      isLoading: false
     }
   }
   addTodo = (todoTitle) => {
@@ -37,15 +32,15 @@ export default class App extends Component {
     //   todos: this.state.todos.push({
     //     id: Math.random(),
     //     title: "what the hell",
-    //     isCompleted: true
+    //     completed: true
     //   })
     // })
     // 通过上述写法 push返回的是todos数组的长度 可用concat替代 或使用slice拷贝数组
     this.setState({
       todos: this.state.todos.concat({
-        id: Math.floor(Math.random()*10),
+        id: Math.floor(Math.random() * 10),
         title: todoTitle,
-        isCompleted: false
+        completed: false
       })
     })
     // 或使用slice 展开符 拷贝数组 再使用push
@@ -53,7 +48,7 @@ export default class App extends Component {
     // newTodos.push({
     //   id: Math.random(),
     //   title: todoTitle,
-    //   isCompleted: false
+    //   completed: false
     // })
     // this.setState({
     //   todos: newTodos
@@ -66,17 +61,17 @@ export default class App extends Component {
       return {
         todos: prevState.todos.map(todo => {
           if (todo.id === id) {
-            todo.isCompleted = !todo.isCompleted
+            todo.completed = !todo.completed
           }
           return todo
         })
       }
     })
   }
-  
+
   onTodoItemDelete = (id) => {
     // console.log("delete item!")
-    this.setState((prevState)=>{
+    this.setState((prevState) => {
       return {
         // 使用filter删除元素
         todos: prevState.todos.filter(todo => {
@@ -91,7 +86,7 @@ export default class App extends Component {
     return (
       // <Fragment>
       <>
-        {/* {this.state.todos[0].isCompleted ? 'accept' : 'denied'} */}
+        {/* {this.state.todos[0].completed ? 'accept' : 'denied'} */}
         {/* 使用map渲染array */}
         {/* {
           this.state.todos.map(todo => {
@@ -112,14 +107,59 @@ export default class App extends Component {
         <TodoInput btnText="Add"
           addTodo={this.addTodo}
         />
-        <TodoList
+        {/* <TodoList
           onCompletedChange={this.onCompletedChange}
           onTodoItemDelete={this.onTodoItemDelete}
           todos={this.state.todos}
-        />
+        /> */}
+        {/* 通过isLoading来决定页面组件的渲染 */}
+        {
+          this.state.isLoading
+            ?
+            <div>loading...</div>
+            :
+            <TodoList
+              onCompletedChange={this.onCompletedChange}
+              onTodoItemDelete={this.onTodoItemDelete}
+              todos={this.state.todos}
+            />
+        }
         <Like />
       </>
       // </Fragment>
     )
+  }
+
+  getData() {
+    // 通过isLoading属性来决定页面渲染顺序
+    this.setState({
+      isLoading: true
+    })
+
+    getTodos()
+      .then(resp => {
+        console.log(resp)
+        if (resp.status === 200) {
+          setTimeout(() => {
+            this.setState({
+              todos: resp.data
+            })
+          }, 2000)
+        } else {
+          // 错误处理
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => {
+        this.setState({
+          isLoading: false
+        })
+      })
+  }
+
+  componentDidMount() {
+    this.getData()
   }
 }
